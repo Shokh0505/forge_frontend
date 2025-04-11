@@ -3,8 +3,11 @@ import Link from "next/link";
 import { Input } from "./ui/input";
 import { CiSearch } from "react-icons/ci";
 import Profile from "./ui/profile";
+import useUser from "@/store/user";
 
 export const Navbar = () => {
+    const { profile_photo } = useUser();
+
     return (
         <div className="bg_main text_main flex items-center justify-between py-8">
             <div className="text-4xl font-semibold">
@@ -19,7 +22,7 @@ export const Navbar = () => {
                     />
                 </div>
             </div>
-            <Profile />
+            <Profile profile_photo={profile_photo} />
         </div>
     );
 };

@@ -1,10 +1,44 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { loginSchema } from "@/schemas/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({ resolver: zodResolver(loginSchema) });
+    const router = useRouter();
+
+    const onSubmit = async (data: { username: string; password: string }) => {
+        try {
+            const res = await fetch("api/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            });
+
+            if (!res.ok) throw new Error("Login failed");
+
+            router.push("/");
+        } catch (error) {
+            if (error instanceof Error) {
+                toast.error(`${error.message}`);
+            } else {
+                toast.error("Something went wrong!");
+            }
+        }
+    };
+
     return (
         <div className="border p-8 min-w-md">
-            <form>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <h3 className="font-semibold mb-2 text-4xl text-center">
                     Login
                 </h3>
@@ -13,6 +47,7 @@ export default function Login() {
                     Username
                 </label>
                 <Input
+                    {...register("username")}
                     name="username"
                     type="text"
                     placeholder="Your username"
@@ -20,10 +55,12 @@ export default function Login() {
                     className="mt-4 mb-8"
                     required
                 />
+                {errors.username && <p>{errors.username.message}</p>}
                 <label htmlFor="password" className="font-medium text-xl">
                     Password
                 </label>
                 <Input
+                    {...register("password")}
                     name="password"
                     id="password"
                     type="password"
@@ -31,10 +68,12 @@ export default function Login() {
                     className="mt-4"
                     required
                 />
+                {errors.password && <p>{errors.password.message}</p>}
                 <Button className="green text-xl w-full mt-8 py-2 h-auto cursor-pointer">
                     Log In
                 </Button>
             </form>
+            <Toaster />
         </div>
     );
 }

@@ -1,5 +1,8 @@
+"use client";
+import { useState } from "react";
 import { Post } from "./Post/Post";
 import { TopCreateChallenge } from "./TopCreateChallenge.tsx/TopCreateChallenge";
+import { CreateChallengeModal } from "../modals/createChallengeModal";
 
 const post = {
     date: "17 - fevral, 2024",
@@ -10,13 +13,22 @@ const post = {
 };
 
 export const LandingPage = () => {
+    const [challengeTitle, setChallengeTitle] = useState("");
+
     return (
-        <div className="px-32 pb-4">
-            <TopCreateChallenge />
+        <div className="px-32 pb-4 overflow-y-auto">
+            <TopCreateChallenge
+                setChallengeTitle={setChallengeTitle}
+                challengeTitle={challengeTitle}
+            />
             <Post post={post} />
             <Post post={post} />
             <Post post={post} />
             <Post post={post} />
+            <CreateChallengeModal
+                challengeTitle={challengeTitle}
+                setChallengeTitle={setChallengeTitle}
+            />
         </div>
     );
 };
