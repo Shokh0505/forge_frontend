@@ -1,4 +1,4 @@
-import Profile from "@/components/ui/profile";
+import Profile from "@/app/components/ui/profile";
 import StreakGrid from "../streak/streak";
 
 export const Challenge = () => {

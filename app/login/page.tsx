@@ -1,10 +1,10 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/app/components/ui/button";
+import { Input } from "@/app/components/ui/input";
 import { loginSchema } from "@/schemas/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/app/components/ui/sonner";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 

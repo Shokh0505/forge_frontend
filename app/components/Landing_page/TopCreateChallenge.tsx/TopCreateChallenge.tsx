@@ -1,7 +1,7 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Profile from "@/components/ui/profile";
+import { Button } from "@/app/components/ui/button";
+import { Input } from "@/app/components/ui/input";
+import Profile from "@/app/components/ui/profile";
 import { TopCreateChallengeProps } from "@/interfaces/interfaces";
 import useOpenCreateChallenge from "@/store/openCreateChallenge";
 import React from "react";

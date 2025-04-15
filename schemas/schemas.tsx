@@ -29,23 +29,36 @@ export const createChallengeSchema = z
         challengePhoto: z
             .any()
             .transform((val) => val?.[0])
-            .refine((file) => file instanceof File, {
-                message: "Please upload a valid image file",
-            })
-            .refine((file) => file?.size <= 5 * 1024 * 1024, {
-                message: "Image must be less than 5MB",
-            })
+            .optional()
             .refine(
-                (file) =>
-                    !file ||
-                    ["image/jpeg", "image/png", "image/jpg"].includes(
+                (file) => {
+                    if (!file) return true; // ✅ allow no file (optional)
+                    return file instanceof File;
+                },
+                {
+                    message: "Please upload a valid image file",
+                }
+            )
+            .refine(
+                (file) => {
+                    if (!file) return true;
+                    return file.size <= 5 * 1024 * 1024;
+                },
+                {
+                    message: "Image must be less than 5MB",
+                }
+            )
+            .refine(
+                (file) => {
+                    if (!file) return true;
+                    return ["image/jpeg", "image/png", "image/jpg"].includes(
                         file.type
-                    ),
+                    );
+                },
                 {
                     message: "Only JPEG, PNG and JPG images are allowed",
                 }
-            )
-            .optional(),
+            ),
         startDate: z
             .string()
             .transform((val) => new Date(val))

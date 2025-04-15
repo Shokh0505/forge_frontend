@@ -1,64 +1,39 @@
 "use client";
-import { Challenges } from "@/components/Challenges/challenges";
-import { Inbox } from "@/components/inbox/inbox";
-import { LandingPage } from "@/components/Landing_page/Landing_Page";
-import { Settings } from "@/components/settings/settings";
-import useNavigation from "@/store/navigation";
-import useUser from "@/store/user";
+import { Challenges } from "@/app/components/Challenges/challenges";
+import { Inbox } from "@/app/components/inbox/inbox";
+import { LandingPage } from "@/app/components/Landing_page/Landing_Page";
+import { Settings } from "@/app/components/settings/settings";
 import { useRouter } from "next/navigation";
-import { Toaster } from "@/components/ui/sonner";
-import { toast } from "sonner";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import fetchUser from "@/lib/fetchUser";
+import useNavigation from "@/store/navigation";
 import { useEffect } from "react";
+import { Toaster } from "../components/ui/sonner";
+
+const queryClient = new QueryClient();
 
 export default function Home() {
     const { navigation } = useNavigation();
-    const { updateUser } = useUser();
-
     const router = useRouter();
+
     useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const response = await fetch("api/whichUser/", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                });
-                const res = await response.json();
-
-                if (!response.ok) {
-                    toast.error(
-                        `There is error fetching data: ${
-                            res.error ? res.error : "Something went wrong(001)"
-                        }`
-                    );
-                    router.push("/login");
-                    return;
-                }
-
-                updateUser({
-                    username: res.user,
-                    email: res.email,
-                    profile_photo: res.profile_photo,
-                });
-            } catch {
-                toast.error(
-                    `There is error fetching data: Internal Server Error(500)`
-                );
+        const checkUser = async () => {
+            const isUserFetchedSuccessfully = await fetchUser();
+            if (!isUserFetchedSuccessfully) {
                 router.push("/login");
             }
         };
-
-        fetchUser();
+        checkUser();
     }, []);
 
     return (
         <>
-            {navigation === "home" && <LandingPage />}
-            {navigation === "my challenges" && <Challenges />}
-            {navigation === "inbox" && <Inbox />}
-            {navigation === "settings" && <Settings />}
+            <QueryClientProvider client={queryClient}>
+                {navigation === "home" && <LandingPage />}
+                {navigation === "my challenges" && <Challenges />}
+                {navigation === "inbox" && <Inbox />}
+                {navigation === "settings" && <Settings />}
+            </QueryClientProvider>
             <Toaster />
         </>
     );

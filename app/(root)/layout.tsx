@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "../styles/globals.css";
-import { Navbar } from "@/components/navbar";
+import { Navbar } from "@/app/components/navbar";
 import { Inter } from "next/font/google";
-import { Leftbar } from "@/components/leftbar";
+import { Leftbar } from "@/app/components/leftbar";
 
 export const metadata: Metadata = {
     title: "My App - Main Section",

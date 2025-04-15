@@ -6,10 +6,10 @@ import {
     DialogHeader,
     DialogTitle,
     DialogFooter,
-} from "@/components/ui/dialog";
+} from "@/app/components/ui/dialog";
 import useOpenCreateChallenge from "@/store/openCreateChallenge";
 import { Input } from "../ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@/app/components/ui/textarea";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "../ui/button";
@@ -104,9 +104,7 @@ export const CreateChallengeModal = ({
             setImage(null);
             setPreview(null);
             setChallengeTitle("");
-        } catch (err) {
-            console.log(err);
-
+        } catch {
             toast.error("Internal Server Error(500)");
         }
     };
@@ -182,9 +180,9 @@ export const CreateChallengeModal = ({
                                     </div>
                                 )}
                             </div>
-                            {errors.challengePhoto && (
+                            {errors.challengePhoto?.message && (
                                 <p className="text-red-500 mt-4">
-                                    {errors.challengePhoto.message}
+                                    {String(errors.challengePhoto.message)}
                                 </p>
                             )}
                         </div>
