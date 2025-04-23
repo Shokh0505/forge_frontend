@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createChallengeSchema } from "@/schemas/schemas";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const CreateChallengeModal = ({
     challengeTitle,
@@ -28,6 +29,7 @@ export const CreateChallengeModal = ({
     const { isOpen, setIsOpen } = useOpenCreateChallenge();
     const [image, setImage] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
+    const queryClient = useQueryClient();
 
     const {
         register,
@@ -99,11 +101,13 @@ export const CreateChallengeModal = ({
             }
 
             toast.success("Challenge created successfully!");
+
             setIsOpen(false);
             reset();
             setImage(null);
             setPreview(null);
             setChallengeTitle("");
+            queryClient.invalidateQueries({ queryKey: ["posts"] });
         } catch {
             toast.error("Internal Server Error(500)");
         }

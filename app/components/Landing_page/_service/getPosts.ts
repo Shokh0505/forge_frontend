@@ -1,6 +1,11 @@
-export default async function getPosts(page = 1) {
+import { QueryFunctionContext } from "@tanstack/react-query";
+import { PaginatedPostsResponse } from "@/interfaces/interfaces";
+
+export default async function getPosts({
+    pageParam,
+}: QueryFunctionContext): Promise<PaginatedPostsResponse> {
     const response = await fetch(
-        `${process.env.NEXT_PUBLIC_FRONTEND_URL}api/getChallenges?page=` + page,
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}api/getChallenges?page=${pageParam}`,
         {
             method: "GET",
             credentials: "include",
@@ -8,9 +13,8 @@ export default async function getPosts(page = 1) {
     );
 
     if (!response.ok) {
-        return { message: "error" };
+        throw new Error("Error fetching posts");
     }
 
-    const data = await response.json();
-    return { message: "success", data: data };
+    return await response.json();
 }

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { TopCreateChallenge } from "./TopCreateChallenge.tsx/TopCreateChallenge";
 import { CreateChallengeModal } from "../modals/createChallengeModal";
+import { Toaster } from "../ui/sonner";
 import Posts from "@/app/(root)/serverComponents/Posts/Posts";
 
 export const LandingPage = () => {
@@ -19,6 +20,7 @@ export const LandingPage = () => {
                     challengeTitle={challengeTitle}
                     setChallengeTitle={setChallengeTitle}
                 />
+                <Toaster />
             </div>
         </>
     );

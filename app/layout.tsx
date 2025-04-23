@@ -21,9 +21,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <head>
-                {/* Add global meta tags, scripts, or styles here if needed */}
-            </head>
+            <head></head>
             <body className={`${inter.variable} font-sans antialiased`}>
                 {children}
             </body>

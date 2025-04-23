@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function POST(req: NextRequest) {
     try {
         if (!process.env.BACKEND_API_URL) {
             return NextResponse.json(
@@ -9,9 +9,8 @@ export async function GET(request: NextRequest) {
             );
         }
 
-        const page = request.nextUrl.searchParams.get("page") || "1";
-        const pageNumber = parseInt(page, 10);
-        const authCookie = request.cookies.get("Authorization");
+        const { id } = await req.json();
+        const authCookie = req.cookies.get("Authorization");
         const authHeader = authCookie ? authCookie.value : null;
 
         const headers: HeadersInit = {
@@ -22,17 +21,18 @@ export async function GET(request: NextRequest) {
         }
 
         const djangoRes = await fetch(
-            `${process.env.BACKEND_API_URL}getChallenges/?page=${pageNumber}`,
+            `${process.env.BACKEND_API_URL}groupChallangeStats/`,
             {
-                method: "GET",
-                headers: headers,
+                method: "POST",
+                headers,
+                body: JSON.stringify({ challengeID: id }),
             }
         );
 
         if (!djangoRes.ok) {
             return NextResponse.json(
                 {
-                    error: "Problem with authentication. If problem persists, please try to log in again.",
+                    error: `Problem with getting info about the challenge.`,
                 },
                 { status: djangoRes.status }
             );
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
         const data = await djangoRes.json();
         return NextResponse.json(data, { status: 200 });
     } catch (error) {
-        console.error("Error fetching data from Django:", error);
+        console.error("Error:", error);
         return NextResponse.json(
             { error: "Internal server error" },
             { status: 500 }

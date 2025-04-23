@@ -3,53 +3,83 @@
 import getPosts from "@/app/components/Landing_page/_service/getPosts";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Post } from "@/app/components/Landing_page/Post/Post";
-import { useEffect, useState, useCallback, useRef } from "react";
-import { toast } from "sonner";
+import { useEffect, useRef } from "react";
+// import { toast } from "sonner";
 import { SkeletonDemo } from "@/app/components/ui/skeletonDemo";
+import useLikedIDs from "@/store/likedIDs";
 
 export default function Posts() {
-    const [posts, setPosts] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const observerRef = useRef<HTMLDivElement | null>(null);
+    const { setLikedIDs } = useLikedIDs();
+
+    const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
+        queryKey: ["posts"],
+        queryFn: getPosts,
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => {
+            return lastPage.next ? lastPage.next : null;
+        },
+    });
 
     useEffect(() => {
-        const getPostsFromAPI = async () => {
-            const posts = await getPosts();
+        if (!data) return;
 
-            if (posts.message === "error") {
-                toast.message(
-                    "Error while fetching posts. Please try again later"
-                );
-            } else {
-                setPosts(posts?.data?.results || []);
+        const lastPage = data.pages[data.pages.length - 1];
+        setLikedIDs(lastPage.likedIDs);
+    }, [data]);
+
+    useEffect(() => {
+        if (!observerRef.current || !hasNextPage) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && hasNextPage && !isFetching) {
+                    fetchNextPage();
+                }
+            },
+            {
+                root: null,
+                rootMargin: "0px",
+                threshold: 1.0,
             }
+        );
 
-            setIsLoading(false);
+        if (observerRef.current) {
+            observer.observe(observerRef.current);
+        }
+
+        return () => {
+            if (observerRef.current) {
+                observer.unobserve(observerRef.current);
+            }
         };
-
-        getPostsFromAPI();
-    }, []);
+    }, [fetchNextPage, hasNextPage, isFetching]);
 
     return (
         <div>
-            {isLoading && (
-                <>
-                    <div className="mt-8 w-[45rem] bg_secondary mx-auto border rounded-md px-2 py-4">
-                        We are fetching the posts for you...
-                    </div>
-                    <SkeletonLanding />
-                </>
-            )}
-            {!isLoading && posts.length === 0 && (
+            {data?.pages
+                .flatMap((page) => page.results)
+                .map((post, index) => (
+                    <Post key={index} post={post} />
+                ))}
+            <div ref={observerRef}>
+                {isFetching && hasNextPage && (
+                    <>
+                        <div className="h-10 flex justify-center items-center">
+                            <div className="text-sm text-gray-500">
+                                Loading more posts...
+                            </div>
+                        </div>
+                        <SkeletonLanding />
+                    </>
+                )}
+            </div>
+
+            {!isFetching && data?.pages.length === 0 && (
                 <div className="mt-8 w-[45rem] bg_secondary mx-auto border rounded-md px-2 py-4">
                     There is no available posts for now.
                 </div>
             )}
-            {Array.isArray(posts) &&
-                posts.map((post, index) => (
-                    <div key={index}>
-                        <Post post={post} />
-                    </div>
-                ))}
         </div>
     );
 }

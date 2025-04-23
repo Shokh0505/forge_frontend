@@ -1,4 +1,6 @@
 import React from "react";
+import { FaAngleLeft } from "react-icons/fa";
+import { FaAngleRight } from "react-icons/fa";
 
 const daysInMonth = 31;
 const firstDayOffset = 3;
@@ -16,20 +18,22 @@ const getColor = (streak: number) => {
 
 const StreakGrid = () => {
     return (
-        <div className="grid grid-cols-7 gap-1 px-8">
-            {Array.from({ length: firstDayOffset }).map((_, i) => (
-                <div key={`offset-${i}`} className="w-5 h-5" />
-            ))}
+        <div>
+            <div className="grid grid-cols-7 gap-1 px-8 flex-10/12 ">
+                {Array.from({ length: firstDayOffset }).map((_, i) => (
+                    <div key={`offset-${i}`} className="w-5 h-5" />
+                ))}
 
-            {streakData.map((streak, index) => (
-                <div
-                    key={index}
-                    className={`w-5 h-5 rounded  cursor-pointer ${getColor(
-                        streak
-                    )}`}
-                    title={`${streak} contributions`}
-                />
-            ))}
+                {streakData.map((streak, index) => (
+                    <div
+                        key={index}
+                        className={`w-5 h-5 rounded  cursor-pointer ${getColor(
+                            streak
+                        )}`}
+                        title={`${streak} contributions`}
+                    />
+                ))}
+            </div>
         </div>
     );
 };
