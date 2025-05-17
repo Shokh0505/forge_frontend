@@ -8,7 +8,6 @@ import formatDate from "@/lib/formatDate";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import useLikedIDs from "@/store/likedIDs";
-import useSelecteChallenge from "@/store/selectedChallenge";
 
 export const Post = ({ post }: { post: PostInterface }) => {
     const {
@@ -22,7 +21,6 @@ export const Post = ({ post }: { post: PostInterface }) => {
     const { isLiked, toggleLike } = useLikedIDs();
     const isUserLiked = isLiked(String(id));
     const router = useRouter();
-    const { setSelectedChallenge } = useSelecteChallenge();
 
     const likeChallenge = async () => {
         const response = await fetch("api/likeChallenge/", {
@@ -42,17 +40,6 @@ export const Post = ({ post }: { post: PostInterface }) => {
     };
 
     const handleGoChallenge = () => {
-        const challenge = {
-            challengeName: challenge_title,
-            challengeDesc: description,
-            challengeOwner: {
-                username: owner.username,
-                profile_photo: owner.profile_photo,
-            },
-        };
-
-        setSelectedChallenge(challenge);
-
         const apiUrl = process.env.NEXT_PUBLIC_FRONTEND_URL;
         router.push(`${apiUrl}challenge/${id}`);
     };

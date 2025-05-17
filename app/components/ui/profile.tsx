@@ -8,7 +8,7 @@ const Profile = (data: ProfileProps) => {
     return (
         <div className="rounded-full overflow-hidden">
             <Image
-                src={profile_photo ? profile_photo : "/default1.png"}
+                src={profile_photo ? `/${profile_photo}` : "/default1.png"}
                 width={36}
                 height={36}
                 alt="The profile picture"

@@ -33,6 +33,8 @@ export async function POST(request: NextRequest) {
         );
 
         if (!resDjango.ok) {
+            const data = await resDjango.json();
+            console.log(data);
             return NextResponse.json(
                 {
                     message:

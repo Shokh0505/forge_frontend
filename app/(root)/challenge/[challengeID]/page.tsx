@@ -6,6 +6,7 @@ import { ChallengeInfoInterface } from "@/interfaces/interfaces";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Toaster } from "@/app/components/ui/sonner";
 
 export default function ChallengeShow() {
     const params = useParams();
@@ -19,6 +20,8 @@ export default function ChallengeShow() {
         todayGroupCompletePercent: 0,
         streakGroup: 0,
         topLeaders: [],
+        challengeTitle: "",
+        owner: { id: "", username: "" },
     });
 
     const handleJoinChallenge = async () => {
@@ -37,6 +40,7 @@ export default function ChallengeShow() {
                 return;
             }
 
+            setApiData({ ...apiData, isJoined: true });
             toast.message("Joined the challenge. Now No going back");
         } catch {
             toast.message(
@@ -62,7 +66,7 @@ export default function ChallengeShow() {
             }
 
             toast.message("Well done!");
-            return;
+            setApiData({ ...apiData, isFinshedToday: true });
         } catch {
             toast.message("Internal server error. Please try again later!");
             return;
@@ -84,7 +88,7 @@ export default function ChallengeShow() {
                 toast.message("Couldn't mark done, please try again later");
                 return;
             }
-
+            setApiData({ ...apiData, isJoined: false });
             toast.message("You should not give up. Rest then come back dude!");
         } catch {
             toast.message("Internal server error. Please try again later!");
@@ -108,7 +112,6 @@ export default function ChallengeShow() {
             }
 
             const resData = await res.json();
-            console.log(resData);
             setApiData({
                 isJoined: resData.data.isJoined,
                 isFinshedToday: resData.data.isFinishedToday,
@@ -117,6 +120,8 @@ export default function ChallengeShow() {
                     resData.data.todayGroupCompletePercent,
                 streakGroup: resData.data.streakGroup,
                 topLeaders: resData.data.topLeaders,
+                owner: resData.data.owner,
+                challengeTitle: resData.data.challengeTitle,
             });
         };
 
@@ -153,23 +158,31 @@ export default function ChallengeShow() {
                         </div>
                     </div>
                 )}
-                <Challenge
-                    id={id}
-                    days={apiData.daysPassed}
-                    percentage={apiData.todayGroupCompletePercent}
-                    streak={apiData.streakGroup}
-                />
-                <div className="mt-4 bg_secondary w-[45rem] rounded px-8 py-4">
-                    <h3 className="text-xl font-bold">Top leaders</h3>
-                    {apiData.topLeaders.map((person, idx) => (
-                        <div key={idx}>
-                            <PersonChat
-                                username={person.username}
-                                profile_photo={person.profile_photo}
-                            />
-                        </div>
-                    ))}
+                <div className="mt-4">
+                    <Challenge
+                        data={{
+                            id: id,
+                            days: apiData.daysPassed,
+                            percentage: apiData.todayGroupCompletePercent,
+                            streak: apiData.streakGroup,
+                            owner: apiData.owner,
+                            challengeTitle: apiData.challengeTitle,
+                        }}
+                    />
                 </div>
+                {apiData.topLeaders?.length !== 0 && (
+                    <div className="mt-4 bg_secondary w-[45rem] rounded px-8 py-4">
+                        <h3 className="text-xl font-bold">Top leaders</h3>
+                        {apiData.topLeaders.map((person, idx) => (
+                            <div key={idx}>
+                                <PersonChat
+                                    username={person.username}
+                                    profile_photo={person.profile_photo}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
             <div className="px-32">
                 {apiData.isJoined && (
@@ -186,6 +199,7 @@ export default function ChallengeShow() {
                     </div>
                 )}
             </div>
+            <Toaster />
         </>
     );
 }

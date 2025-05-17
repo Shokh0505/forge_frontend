@@ -42,7 +42,15 @@ export interface LikedIDsInterface {
     isLiked: (id: string) => boolean;
 }
 
+export interface UserInterfaceWithID {
+    id: string;
+    username: string;
+    profile_photo?: string;
+}
+
 export interface ChallengeInfoInterface {
+    owner: UserInterfaceWithID;
+    challengeTitle: string;
     isJoined: boolean;
     isFinshedToday: boolean;
     daysPassed: number;
@@ -60,4 +68,25 @@ interface Challenge {
 export interface ChallengeInterface {
     challenge: Challenge;
     setSelectedChallenge: (challenge: Challenge) => void;
+}
+
+export interface ChallengeParticipatedInterface {
+    id: string;
+    days: number;
+    percentage: number;
+    streak: number;
+    owner: string;
+    challengeTitle: string;
+}
+
+export interface MessageDataAPI {
+    sender: { id: number | string; username: string };
+    message: string;
+    sent_at: string;
+}
+
+export interface MessagesInterface {
+    person: "user" | "partner";
+    message: string;
+    sentAt: string;
 }
