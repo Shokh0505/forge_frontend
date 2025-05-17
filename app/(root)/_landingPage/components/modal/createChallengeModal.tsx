@@ -1,4 +1,22 @@
 "use client";
+import { createFormDataChallenge } from "@/lib/createFormDataChallenge";
+import { handleCreateChallengeSubmit } from "../../service/handleCreateChallenge";
+import { useChallengeTitle } from "@/app/(root)/_landingPage/hooks/useChallengeTitle";
+import { useImagePreview } from "./hooks/imagePreview";
+
+import useOpenCreateChallenge from "@/store/openCreateChallenge";
+import { SubmitChallengeInterface } from "@/interfaces/interfaces";
+import { createChallengeSchema } from "@/schemas/schemas";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+
+import Image from "next/image";
+import { Input } from "../../../../components/ui/input";
+import { Textarea } from "@/app/components/ui/textarea";
+import { Button } from "../../../../components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -7,28 +25,12 @@ import {
     DialogTitle,
     DialogFooter,
 } from "@/app/components/ui/dialog";
-import useOpenCreateChallenge from "@/store/openCreateChallenge";
-import { Input } from "../ui/input";
-import { Textarea } from "@/app/components/ui/textarea";
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { Button } from "../ui/button";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createChallengeSchema } from "@/schemas/schemas";
-import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
 
-export const CreateChallengeModal = ({
-    challengeTitle,
-    setChallengeTitle,
-}: {
-    challengeTitle: string;
-    setChallengeTitle: React.Dispatch<React.SetStateAction<string>>;
-}) => {
+export const CreateChallengeModal = () => {
     const { isOpen, setIsOpen } = useOpenCreateChallenge();
     const [image, setImage] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
+    const { challengeTitle, setChallengeTitle } = useChallengeTitle();
     const queryClient = useQueryClient();
 
     const {
@@ -45,71 +47,40 @@ export const CreateChallengeModal = ({
     });
 
     const challengePhoto = watch("challengePhoto");
+    useImagePreview({ challengePhoto, setImage, setPreview });
 
-    useEffect(() => {
-        const fileList = challengePhoto as FileList | undefined;
-
-        if (fileList?.[0] instanceof File) {
-            const file = fileList[0];
-            setImage(file);
-            setPreview(URL.createObjectURL(file));
-        }
-    }, [challengePhoto]);
-
+    // Clean up for preview
     useEffect(() => {
         return () => {
             if (preview) URL.revokeObjectURL(preview);
         };
     }, [preview]);
 
+    // If title was written in topCreateChallenge, put it here as well
     useEffect(() => {
         if (isOpen) {
             reset({ challengeName: challengeTitle });
         }
     }, [isOpen, challengeTitle, reset]);
 
-    const onSubmit = async (data: {
-        challengeName: string;
-        challengeDesc: string;
-        challengePhoto?: File;
-        startDate: Date;
-        endDate: Date;
-    }) => {
-        const formData = new FormData();
-        formData.append("challengeName", data.challengeName);
-        formData.append("challengeDesc", data.challengeDesc);
-        if (data.challengePhoto) {
-            formData.append("challengePhoto", data.challengePhoto);
-        }
-        formData.append("startDate", data.startDate.toISOString());
-        formData.append("endDate", data.endDate.toISOString());
+    const onSubmit = async (data: SubmitChallengeInterface) => {
+        const formData = createFormDataChallenge(data);
 
-        try {
-            const res = await fetch("api/createChallenge/", {
-                method: "POST",
-                body: formData,
-                credentials: "include",
-            });
+        const isSuccessfullySubmitted = await handleCreateChallengeSubmit(
+            formData
+        );
 
-            if (!res.ok) {
-                const errorMessage = await res.text();
-                toast.error(
-                    errorMessage ||
-                        "Couldn't Create a challenge. Try again later"
-                );
-                throw new Error("API returned an error");
-            }
-
+        if (isSuccessfullySubmitted) {
             toast.success("Challenge created successfully!");
-
             setIsOpen(false);
             reset();
             setImage(null);
             setPreview(null);
             setChallengeTitle("");
             queryClient.invalidateQueries({ queryKey: ["posts"] });
-        } catch {
-            toast.error("Internal Server Error(500)");
+        } else {
+            toast.error("Couldn't Create a challenge. Try again later");
+            throw new Error("API returned an error");
         }
     };
 

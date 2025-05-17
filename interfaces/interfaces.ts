@@ -90,3 +90,11 @@ export interface MessagesInterface {
     message: string;
     sentAt: string;
 }
+
+export interface SubmitChallengeInterface {
+    challengeName: string;
+    challengeDesc: string;
+    challengePhoto?: File;
+    startDate: Date;
+    endDate: Date;
+}

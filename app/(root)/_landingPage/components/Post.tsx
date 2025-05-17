@@ -1,13 +1,15 @@
 "use client";
+import formatDate from "@/lib/formatDate";
+import useLikedIDs from "@/store/likedIDs";
+import { likeChallenge } from "../service/likeChallenge";
+import { PostInterface } from "@/interfaces/interfaces";
+
 import Image from "next/image";
 import Profile from "@/app/components/ui/profile";
+import { useRouter } from "next/navigation";
+
 import { FaHeart } from "react-icons/fa";
 import { IoIosAddCircle } from "react-icons/io";
-import { PostInterface } from "@/interfaces/interfaces";
-import formatDate from "@/lib/formatDate";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import useLikedIDs from "@/store/likedIDs";
 
 export const Post = ({ post }: { post: PostInterface }) => {
     const {
@@ -18,26 +20,9 @@ export const Post = ({ post }: { post: PostInterface }) => {
         description,
         challenge_title,
     } = post;
-    const { isLiked, toggleLike } = useLikedIDs();
+    const { isLiked } = useLikedIDs();
     const isUserLiked = isLiked(String(id));
     const router = useRouter();
-
-    const likeChallenge = async () => {
-        const response = await fetch("api/likeChallenge/", {
-            method: isUserLiked ? "DELETE" : "POST",
-            body: JSON.stringify({ id: id }),
-            credentials: "include",
-        });
-
-        if (!response.ok) {
-            toast.message(
-                "Experiencing issue with like challenge. Please try again later!"
-            );
-            return;
-        }
-
-        toggleLike(String(id));
-    };
 
     const handleGoChallenge = () => {
         const apiUrl = process.env.NEXT_PUBLIC_FRONTEND_URL;
@@ -79,7 +64,7 @@ export const Post = ({ post }: { post: PostInterface }) => {
                     className={`w-7 h-7 hover:text-red-500 cursor-pointer ${
                         isUserLiked ? "text-red-600" : ""
                     }`}
-                    onClick={likeChallenge}
+                    onClick={() => likeChallenge({ isUserLiked, id })}
                 />
                 <div>
                     <IoIosAddCircle className="w-8 h-8" />

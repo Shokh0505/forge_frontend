@@ -1,15 +1,12 @@
 "use client";
-import { Button } from "@/app/components/ui/button";
-import { Input } from "@/app/components/ui/input";
 import Profile from "@/app/components/ui/profile";
-import { TopCreateChallengeProps } from "@/interfaces/interfaces";
 import useOpenCreateChallenge from "@/store/openCreateChallenge";
-import React from "react";
+import { useChallengeTitle } from "../hooks/useChallengeTitle";
+import { Input } from "@/app/components/ui/input";
+import { Button } from "@/app/components/ui/button";
 
-export const TopCreateChallenge: React.FC<TopCreateChallengeProps> = ({
-    setChallengeTitle,
-    challengeTitle,
-}) => {
+export const TopCreateChallenge = () => {
+    const { challengeTitle, setChallengeTitle } = useChallengeTitle();
     const { setIsOpen } = useOpenCreateChallenge();
     const openDialog = () => setIsOpen(true);
 

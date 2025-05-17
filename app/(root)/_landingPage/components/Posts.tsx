@@ -1,12 +1,13 @@
 "use client";
 
-import getPosts from "@/app/components/Landing_page/_service/getPosts";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { Post } from "@/app/components/Landing_page/Post/Post";
-import { useEffect, useRef } from "react";
-// import { toast } from "sonner";
-import { SkeletonDemo } from "@/app/components/ui/skeletonDemo";
+import getPosts from "@/app/(root)/_landingPage/service/getPosts";
 import useLikedIDs from "@/store/likedIDs";
+
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useEffect, useRef } from "react";
+
+import { Post } from "@/app/(root)/_landingPage/components/Post";
+import { SkeletonDemo } from "@/app/components/ui/skeletonDemo";
 
 export default function Posts() {
     const observerRef = useRef<HTMLDivElement | null>(null);
@@ -21,13 +22,14 @@ export default function Posts() {
         },
     });
 
+    // Update liked posts
     useEffect(() => {
         if (!data) return;
-
         const lastPage = data.pages[data.pages.length - 1];
         setLikedIDs(lastPage.likedIDs);
     }, [data]);
 
+    // if user reaches the end of posts, trigger fetching new posts
     useEffect(() => {
         if (!observerRef.current || !hasNextPage) return;
 

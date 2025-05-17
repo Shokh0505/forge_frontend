@@ -6,7 +6,7 @@ interface Navigation {
 }
 
 const useNavigation = create<Navigation>((set) => ({
-    navigation: "inbox",
+    navigation: "home",
     setNavigation: (nav: string) => set({ navigation: nav }),
 }));
 

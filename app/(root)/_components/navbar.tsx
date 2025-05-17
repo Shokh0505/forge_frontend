@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
-import { Input } from "./ui/input";
+import { Input } from "@/components/ui/input";
 import { CiSearch } from "react-icons/ci";
-import Profile from "./ui/profile";
+import Profile from "@/app/components/ui/profile";
 import useUser from "@/store/user";
 
 export const Navbar = () => {

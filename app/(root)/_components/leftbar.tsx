@@ -1,7 +1,7 @@
 "use client";
 
+import { MenuItem } from "@/app/components/ui/menu_item";
 import useNavigation from "@/store/navigation";
-import { MenuItem } from "./ui/menu_item";
 
 export const Leftbar = () => {
     const { navigation } = useNavigation();
