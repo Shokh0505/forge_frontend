@@ -1,8 +1,10 @@
-import { Input } from "../ui/input";
-import Profile from "../ui/profile";
-import { Switch } from "../ui/switch";
+import Profile from "@/components/ui/profile";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import useUser from "@/store/user";
 
 export const Settings = () => {
+    const { username } = useUser();
     return (
         <div className="px-32 pb-4 mt-12 overflow-auto">
             <div className="w-full bg_secondary pt-[8rem] rounded-xl pb-10">
@@ -12,8 +14,8 @@ export const Settings = () => {
                     </div>
                     <hr className="green w-full z-0 relative translate-y-[-2.5rem]" />{" "}
                 </div>
-                <div className="mt-12 px-10">
-                    <div className="text-3xl font-bold">Allakimov Allakim</div>
+                <div className="mt-6 px-10">
+                    <div className="text-3xl font-bold">{username}</div>
                     <div className="mt-4 text_secondary">
                         Nimagadir qiziqadi hobbisini bilmayman futbol
                         o&apos;ynashni yaxshi biladi

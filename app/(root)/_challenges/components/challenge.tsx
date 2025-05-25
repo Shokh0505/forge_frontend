@@ -1,58 +1,34 @@
 "use client";
-import Profile from "@/app/components/ui/profile";
-import StreakGrid from "../streak/streak";
+import getStreakData from "../service/getStreakData";
+import { ChallengeParticipatedInterface } from "@/interfaces/interfaces";
+
+import Profile from "@/components/ui/profile";
+import StreakGrid from "./streak";
+
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { UserInterfaceWithID } from "@/interfaces/interfaces";
 
 export const Challenge = ({
     data,
 }: {
-    data: {
-        id: string;
-        days: number;
-        percentage?: number;
-        streak: number;
-        owner: UserInterfaceWithID;
-        challengeTitle: string;
-    };
+    data: ChallengeParticipatedInterface;
 }) => {
     const [streakData, setStreakData] = useState([]);
+    const { id, days, percentage, streak, owner, challengeTitle } = data;
     const router = useRouter();
+
     useEffect(() => {
-        console.log(data.owner);
-        const getStreakData = async () => {
-            const payload = {
-                challengeID: data.id,
-                date: new Date().toISOString().split("T")[0],
-            };
-
-            const res = await fetch(
-                `${process.env.NEXT_PUBLIC_FRONTEND_URL}api/getChallengeStreak/`,
-                {
-                    method: "POST",
-                    credentials: "include",
-                    body: JSON.stringify(payload),
-                }
-            );
-
-            if (!res.ok) {
-                toast.message("Couldn't get streak. Try again later");
+        const fetchData = async () => {
+            const data = await getStreakData(id);
+            if (data.length !== 0) {
+                setStreakData(data);
             }
-
-            const streakData = await res.json();
-
-            setStreakData(streakData.data);
         };
-
-        getStreakData();
+        fetchData();
     }, []);
 
     const handleGoChallenge = () => {
-        router.push(
-            `${process.env.NEXT_PUBLIC_FRONTEND_URL}challenge/${data.id}`
-        );
+        router.push(`${process.env.NEXT_PUBLIC_FRONTEND_URL}challenge/${id}`);
     };
 
     const handleNavigationChat = (
@@ -60,9 +36,7 @@ export const Challenge = ({
     ) => {
         e.stopPropagation();
 
-        router.push(
-            `${process.env.NEXT_PUBLIC_FRONTEND_URL}chat/${data.owner.id}`
-        );
+        router.push(`${process.env.NEXT_PUBLIC_FRONTEND_URL}chat/${owner.id}`);
     };
 
     return (
@@ -75,29 +49,23 @@ export const Challenge = ({
                     <Profile />
                 </div>
                 <div className="ml-4">
-                    <div className="text-md">{data.owner.username}</div>
-                    <div className="text_secondary">{data.challengeTitle}</div>
+                    <div className="font-medium">{owner?.username}</div>
+                    <div className="text_secondary">{challengeTitle}</div>
                 </div>
             </div>
             <div className="mt-16 flex items-center justify-between px-4">
                 <div className="relative">
-                    <div className="text-3xl font-semibold">
-                        {data.days} days
-                    </div>
+                    <div className="text-3xl font-semibold">{days} days</div>
                     <div className="text_secondary">Finished</div>
                 </div>
                 <div className="w-1 h-12 bg-green-500"></div>
                 <div>
-                    <div className="text-3xl font-semibold">
-                        {data.percentage} %
-                    </div>
+                    <div className="text-3xl font-semibold">{percentage} %</div>
                     <div className="text_secondary">completed (today)</div>
                 </div>
                 <div className="w-1 h-12 bg-green-500"></div>
                 <div>
-                    <div className="text-3xl font-semibold">
-                        {data.streak} days
-                    </div>
+                    <div className="text-3xl font-semibold">{streak} days</div>
                     <div className="text_secondary">streak</div>
                 </div>
             </div>

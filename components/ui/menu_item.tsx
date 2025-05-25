@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { FaAward, FaHome } from "react-icons/fa";
 import { FiMessageSquare } from "react-icons/fi";
 import { IoSettingsSharp } from "react-icons/io5";
-import styles from "../style.module.css";
+import styles from "./styles/style.module.css";
 import useNavigation from "@/store/navigation";
 
 export const MenuItem = ({

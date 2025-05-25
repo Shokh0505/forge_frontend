@@ -75,7 +75,7 @@ export interface ChallengeParticipatedInterface {
     days: number;
     percentage: number;
     streak: number;
-    owner: string;
+    owner: UserInterfaceWithID;
     challengeTitle: string;
 }
 
@@ -97,4 +97,13 @@ export interface SubmitChallengeInterface {
     challengePhoto?: File;
     startDate: Date;
     endDate: Date;
+}
+
+export interface inboxPeopleChatInterface {
+    last_message: {
+        sender: UserInterfaceWithID;
+        sent_at: string;
+        message: string;
+    };
+    user: UserInterfaceWithID;
 }

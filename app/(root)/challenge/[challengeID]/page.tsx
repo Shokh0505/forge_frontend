@@ -1,12 +1,18 @@
 "use client";
-import { Challenge } from "@/app/components/Challenges/challenge/challenge";
-import { PersonChat } from "@/app/components/inbox/person_chat/person_chat";
-import { Button } from "@/app/components/ui/button";
+import joinChallenge from "./_service/handleJoinChallenge";
+import finishToday from "./_service/finishToday";
+import leaveChallenge from "./_service/leaveChallenge";
+import getChallengeInfo from "./_service/getChallengeInfo";
 import { ChallengeInfoInterface } from "@/interfaces/interfaces";
+
+import { Challenge } from "@/app/(root)/_challenges/components/challenge";
+import { PersonChat } from "@/app/(root)/_inbox/components/person_chat";
+import { Toaster } from "@/components/ui/sonner";
+import { Button } from "@/components/ui/button";
+
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Toaster } from "@/app/components/ui/sonner";
 
 export default function ChallengeShow() {
     const params = useParams();
@@ -25,24 +31,12 @@ export default function ChallengeShow() {
     });
 
     const handleJoinChallenge = async () => {
-        try {
-            const res = await fetch(
-                `${process.env.NEXT_PUBLIC_FRONTEND_URL}api/joinChallenge/`,
-                {
-                    method: "POST",
-                    credentials: "include",
-                    body: JSON.stringify({ id: id }),
-                }
-            );
+        const hasSuccessfullyJoined = await joinChallenge(id);
 
-            if (!res.ok) {
-                toast.message("Couldn't join the challenge");
-                return;
-            }
-
+        if (hasSuccessfullyJoined) {
             setApiData({ ...apiData, isJoined: true });
             toast.message("Joined the challenge. Now No going back");
-        } catch {
+        } else {
             toast.message(
                 "Coudln't add to the challenge. Please try again later"
             );
@@ -50,82 +44,38 @@ export default function ChallengeShow() {
     };
 
     const handleDoneChallenge = async () => {
-        try {
-            const data = await fetch(
-                `${process.env.NEXT_PUBLIC_FRONTEND_URL}api/finishedChallengeToday/`,
-                {
-                    method: "POST",
-                    credentials: "include",
-                    body: JSON.stringify({ id: id }),
-                }
-            );
+        const hasFinishedSuccessfully = await finishToday(id);
 
-            if (!data.ok) {
-                toast.message("Couldn't mark done, please try again later");
-                return;
-            }
-
+        if (hasFinishedSuccessfully) {
             toast.message("Well done!");
             setApiData({ ...apiData, isFinshedToday: true });
-        } catch {
-            toast.message("Internal server error. Please try again later!");
-            return;
+        } else {
+            toast.message(
+                "Oops, something went wrong. Please try again later!"
+            );
         }
     };
 
     const handleLeaveChallenge = async () => {
-        try {
-            const data = await fetch(
-                `${process.env.NEXT_PUBLIC_FRONTEND_URL}api/leaveChallenge/`,
-                {
-                    method: "POST",
-                    credentials: "include",
-                    body: JSON.stringify({ id: id }),
-                }
-            );
+        const hasLeftSuccessfully = await leaveChallenge(id);
 
-            if (!data.ok) {
-                toast.message("Couldn't mark done, please try again later");
-                return;
-            }
+        if (hasLeftSuccessfully) {
             setApiData({ ...apiData, isJoined: false });
             toast.message("You should not give up. Rest then come back dude!");
-        } catch {
-            toast.message("Internal server error. Please try again later!");
+        } else {
+            toast.message(
+                "Ooops, something went wrong. Please try again later"
+            );
         }
     };
 
     useEffect(() => {
-        const getChalengeInfo = async () => {
-            const res = await fetch(
-                `${process.env.NEXT_PUBLIC_FRONTEND_URL}api/getChallengeInfo/`,
-                {
-                    method: "POST",
-                    credentials: "include",
-                    body: JSON.stringify({ id: id }),
-                }
-            );
+        async function load() {
+            const data = await getChallengeInfo(id);
+            if (data) setApiData(data);
+        }
 
-            if (!res.ok) {
-                toast.message("Couldn't get challenge info");
-                return;
-            }
-
-            const resData = await res.json();
-            setApiData({
-                isJoined: resData.data.isJoined,
-                isFinshedToday: resData.data.isFinishedToday,
-                daysPassed: resData.data.daysPassed,
-                todayGroupCompletePercent:
-                    resData.data.todayGroupCompletePercent,
-                streakGroup: resData.data.streakGroup,
-                topLeaders: resData.data.topLeaders,
-                owner: resData.data.owner,
-                challengeTitle: resData.data.challengeTitle,
-            });
-        };
-
-        getChalengeInfo();
+        load();
     }, []);
 
     return (

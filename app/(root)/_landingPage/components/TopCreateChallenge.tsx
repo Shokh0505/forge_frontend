@@ -1,9 +1,11 @@
 "use client";
-import Profile from "@/app/components/ui/profile";
+import Profile from "@/components/ui/profile";
 import useOpenCreateChallenge from "@/store/openCreateChallenge";
+
 import { useChallengeTitle } from "../hooks/useChallengeTitle";
-import { Input } from "@/app/components/ui/input";
-import { Button } from "@/app/components/ui/button";
+
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export const TopCreateChallenge = () => {
     const { challengeTitle, setChallengeTitle } = useChallengeTitle();

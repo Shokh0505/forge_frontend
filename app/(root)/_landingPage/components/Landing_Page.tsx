@@ -1,7 +1,7 @@
 "use client";
 import { TopCreateChallenge } from "./TopCreateChallenge";
 import { CreateChallengeModal } from "./modal/createChallengeModal";
-import { Toaster } from "../../../components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
 import Posts from "@/app/(root)/_landingPage/components/Posts";
 
 export const LandingPage = () => {

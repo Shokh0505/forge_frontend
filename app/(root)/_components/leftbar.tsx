@@ -1,6 +1,6 @@
 "use client";
 
-import { MenuItem } from "@/app/components/ui/menu_item";
+import { MenuItem } from "@/components/ui/menu_item";
 import useNavigation from "@/store/navigation";
 
 export const Leftbar = () => {

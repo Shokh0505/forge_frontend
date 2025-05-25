@@ -14,9 +14,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 import Image from "next/image";
-import { Input } from "../../../../components/ui/input";
-import { Textarea } from "@/app/components/ui/textarea";
-import { Button } from "../../../../components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -24,7 +24,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogFooter,
-} from "@/app/components/ui/dialog";
+} from "@/components/ui/dialog";
 
 export const CreateChallengeModal = () => {
     const { isOpen, setIsOpen } = useOpenCreateChallenge();

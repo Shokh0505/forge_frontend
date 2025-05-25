@@ -7,7 +7,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 
 import { Post } from "@/app/(root)/_landingPage/components/Post";
-import { SkeletonDemo } from "@/app/components/ui/skeletonDemo";
+import { SkeletonDemo } from "@/components/ui/skeletonDemo";
 
 export default function Posts() {
     const observerRef = useRef<HTMLDivElement | null>(null);

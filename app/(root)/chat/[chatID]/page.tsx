@@ -1,16 +1,19 @@
 "use client";
 
-import Profile from "@/app/components/ui/profile";
+import useNavigation from "@/store/navigation";
+import getToken from "./_service/getToken";
+import getMessages from "./_service/getMessages";
+import { MessageDataAPI, MessagesInterface } from "@/interfaces/interfaces";
+
+import Profile from "@/components/ui/profile";
 import { FaArrowAltCircleLeft } from "react-icons/fa";
 import { PiTelegramLogoDuotone } from "react-icons/pi";
-import { useParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
+
+import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { MessageDataAPI, MessagesInterface } from "@/interfaces/interfaces";
 import cookie from "cookie";
-import { toast } from "sonner";
-import useNavigation from "@/store/navigation";
 
 export default function PersonChatIndividual() {
     const params = useParams();
@@ -43,21 +46,11 @@ export default function PersonChatIndividual() {
         prevScrollHeight.current = container.scrollHeight;
         prevScrollTop.current = container.scrollTop;
 
-        const messagesPromise = await fetch(
-            `${process.env.NEXT_PUBLIC_FRONTEND_URL}api/getChatMessages/?page=${pageNumber}`,
-            {
-                method: "POST",
-                credentials: "include",
-                body: JSON.stringify({ partnerID: partnerID }),
-            }
-        );
+        let data = null;
 
-        if (!messagesPromise.ok) {
-            console.log("Promise was not ok. Debug it");
-            return;
+        if (typeof partnerID === "string") {
+            data = await getMessages(pageNumber, partnerID);
         }
-
-        const data = await messagesPromise.json();
 
         if (!data || data.data === null) return;
         const reversed = data.data.reverse();
@@ -78,7 +71,7 @@ export default function PersonChatIndividual() {
 
     // Just getting the token
     useEffect(() => {
-        const getToken = async () => {
+        const getOrSetToken = async () => {
             const cookies = cookie.parse(document.cookie || "");
             const tokenCookie = cookies.authToken;
 
@@ -88,21 +81,8 @@ export default function PersonChatIndividual() {
                 return;
             }
 
-            const token = await fetch(
-                `${process.env.NEXT_PUBLIC_FRONTEND_URL}api/getToken`,
-                {
-                    method: "GET",
-                    credentials: "include",
-                }
-            );
-
-            if (!token.ok) {
-                toast.message("Problem with authentication.");
-                return;
-            }
-
-            const { token: tokenValue } = await token.json();
-            const finalToken = tokenValue.split(/\s+/)[1];
+            const finalToken = await getToken();
+            if (!finalToken) return;
 
             setToken(finalToken);
             setIsTokenReady(true);
@@ -110,7 +90,7 @@ export default function PersonChatIndividual() {
             document.cookie = `authToken=${finalToken}; path=/;`;
         };
 
-        getToken();
+        getOrSetToken();
 
         return () => {
             document.cookie = "authToken=; path=/;";
@@ -118,8 +98,8 @@ export default function PersonChatIndividual() {
     }, []);
 
     // Establish web socket
-    // In production, make guardrails for if web socket connection is lost
-    // in some interval, ping the server to see if it is still open, so you know it is not sleeping
+    // In production, make guardrails if web socket connection is lost
+    // in some interval, i would ping the server to see if it is still open, so you know it is not sleeping
     useEffect(() => {
         if (!partnerID || !token || !isTokenReady) return;
 

@@ -20,15 +20,15 @@ export default async function fetchUser() {
             );
             return false;
         }
-
+        const user = res.user;
         updateUser({
-            username: res.user,
-            email: res.email,
-            profile_photo: res.profile_photo,
+            username: user.username,
+            email: user.email,
+            profile_photo: user.profile_photo,
         });
         return true;
-    } catch {
-        console.log("Internal Server Error");
+    } catch (error) {
+        console.log("Internal Server Error", error);
         return false;
     }
 }

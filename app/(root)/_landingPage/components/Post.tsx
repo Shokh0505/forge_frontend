@@ -5,7 +5,7 @@ import { likeChallenge } from "../service/likeChallenge";
 import { PostInterface } from "@/interfaces/interfaces";
 
 import Image from "next/image";
-import Profile from "@/app/components/ui/profile";
+import Profile from "@/components/ui/profile";
 import { useRouter } from "next/navigation";
 
 import { FaHeart } from "react-icons/fa";
