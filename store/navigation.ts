@@ -6,7 +6,7 @@ interface Navigation {
 }
 
 const useNavigation = create<Navigation>((set) => ({
-    navigation: "my challenges",
+    navigation: "settings",
     setNavigation: (nav: string) => set({ navigation: nav }),
 }));
 
