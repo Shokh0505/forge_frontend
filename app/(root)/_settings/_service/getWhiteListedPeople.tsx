@@ -17,7 +17,7 @@ export default async function getWhiteListedPeople() {
         }
 
         const data = await promise.json();
-        console.log(data);
+        return data.whiteListedPeople.data;
     } catch (error) {
         const err = error as Error;
         toast.message(

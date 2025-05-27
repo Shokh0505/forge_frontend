@@ -1,16 +1,23 @@
-import Profile from "@/components/ui/profile";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import useUser from "@/store/user";
-import { ChooseProfilePicModal } from "./components/chooseProfilePicModal";
-import useModalProfilePicture from "@/store/openChooseProfilePicuture";
-import { FaPen } from "react-icons/fa";
-import useOpenChangeBio from "@/store/openChangeBio";
-import { ChangeHobbyModal } from "./components/changeHobbyModal";
-import { useEffect, useState } from "react";
+import getWhiteListedPeople from "./_service/getWhiteListedPeople";
 import toggleAllowMessagesAsync from "./_service/allowMessages";
 import addWhiteList from "./_service/addWhiteList";
-import getWhiteListedPeople from "./_service/getWhiteListedPeople";
+
+import useUser from "@/store/user";
+import useModalProfilePicture from "@/store/openChooseProfilePicuture";
+import useOpenChangeBio from "@/store/openChangeBio";
+
+import { UserInterfaceWithID } from "@/interfaces/interfaces";
+
+import Profile from "@/components/ui/profile";
+import { WhitelistPeopleTable } from "./components/whitelistPeopleTable";
+import { ChooseProfilePicModal } from "./components/chooseProfilePicModal";
+import { ChangeHobbyModal } from "./components/changeHobbyModal";
+
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { FaPen } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import isMessagingAllowed from "./_service/isMessagingAllowed";
 
 export const Settings = () => {
     const { username, profile_photo } = useUser();
@@ -18,6 +25,19 @@ export const Settings = () => {
     const { open, setOpen } = useOpenChangeBio();
     const [allowMessages, setAllowMessages] = useState(true);
     const [whiteListUsername, setWhiteListUsername] = useState("");
+    const [allowedPeople, setAllowedPeople] = useState<UserInterfaceWithID[]>(
+        []
+    );
+
+    // is messaging allowed?
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await isMessagingAllowed();
+            setAllowMessages(data.isAllowed);
+        };
+
+        fetchData();
+    }, [allowMessages]);
 
     useEffect(() => {
         const changeAllowMessages = async () => {
@@ -27,15 +47,24 @@ export const Settings = () => {
         changeAllowMessages();
     }, [allowMessages]);
 
+    // add to white list
     const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && whiteListUsername.trim()) {
             await addWhiteList(whiteListUsername);
         }
     };
 
+    // get whitelisted people
     useEffect(() => {
-        getWhiteListedPeople();
-    }, []);
+        const fetchData = async () => {
+            const people = await getWhiteListedPeople();
+            setAllowedPeople(people);
+        };
+
+        if (!allowMessages) {
+            fetchData();
+        }
+    }, [allowMessages]);
 
     return (
         <div className="px-32 pb-4 mt-12 overflow-auto">
@@ -93,6 +122,13 @@ export const Settings = () => {
                             </div>
                         </div>
                     )}
+                    <div className="mt-8">
+                        {!allowMessages && (
+                            <WhitelistPeopleTable
+                                allowedPeople={allowedPeople}
+                            />
+                        )}
+                    </div>
                     <ChooseProfilePicModal />
                     <ChangeHobbyModal />
                 </div>
