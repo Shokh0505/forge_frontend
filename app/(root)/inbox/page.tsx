@@ -1,10 +1,11 @@
+"use client";
 import { toast } from "sonner";
 import { PersonChat } from "./components/person_chat";
 import { useRouter } from "next/navigation";
 import useInboxPeople from "./_hooks/inboxPeople";
 import { inboxPeopleChatInterface } from "@/interfaces/interfaces";
 
-export const Inbox = () => {
+export default function Inbox() {
     const router = useRouter();
     const { inboxPeople, loading, error } = useInboxPeople();
 
@@ -44,4 +45,4 @@ export const Inbox = () => {
             </div>
         </div>
     );
-};
+}

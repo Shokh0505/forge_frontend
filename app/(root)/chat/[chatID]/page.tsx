@@ -217,7 +217,7 @@ export default function PersonChatIndividual() {
 
     function handleGoBack() {
         setNavigation("inbox");
-        router.push(`${process.env.NEXT_PUBLIC_FRONTEND_URL}`);
+        router.push(`${process.env.NEXT_PUBLIC_FRONTEND_URL}inbox/`);
     }
 
     return (

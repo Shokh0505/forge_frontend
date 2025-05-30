@@ -1,12 +1,13 @@
-import { getParticipatedChallenges } from "../service/getParticipatedChallenge";
+"use client";
+import { getParticipatedChallenges } from "./service/getParticipatedChallenge";
 import { ChallengeParticipatedInterface } from "@/interfaces/interfaces";
-import { Challenge } from "./challenge";
+import { Challenge } from "./components/challenge";
 
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
 
-export const Challenges = () => {
+export default function Challenges() {
     const { data, isLoading, isError } = useQuery({
         queryKey: ["participatedChallenges"],
         queryFn: getParticipatedChallenges,
@@ -44,4 +45,4 @@ export const Challenges = () => {
                 )}
         </div>
     );
-};
+}

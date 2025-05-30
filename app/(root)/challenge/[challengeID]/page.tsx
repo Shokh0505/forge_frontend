@@ -5,8 +5,8 @@ import leaveChallenge from "./_service/leaveChallenge";
 import getChallengeInfo from "./_service/getChallengeInfo";
 import { ChallengeInfoInterface } from "@/interfaces/interfaces";
 
-import { Challenge } from "@/app/(root)/_challenges/components/challenge";
-import { PersonChat } from "@/app/(root)/_inbox/components/person_chat";
+import { Challenge } from "@/app/(root)/challenges/components/challenge";
+import { PersonChat } from "@/app/(root)/inbox/components/person_chat";
 import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 

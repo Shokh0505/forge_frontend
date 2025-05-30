@@ -8,13 +8,13 @@ import styles from "./styles/style.module.css";
 import useNavigation from "@/store/navigation";
 
 export const MenuItem = ({
-    selected,
     name,
     icon,
+    selected,
 }: {
-    selected: string;
     name: string;
     icon: "home" | "challenges" | "inbox" | "settings";
+    selected?: boolean;
 }) => {
     const lowerCaseName = name.toLowerCase();
     const { setNavigation } = useNavigation();
@@ -24,7 +24,7 @@ export const MenuItem = ({
             className={clsx(
                 "px-2 py-4 rounded-[4px] relative cursor-pointer mb-4 hover:",
                 `${styles.bg_hover}`,
-                selected === lowerCaseName ? "bg_third" : "bg_secondary"
+                selected ? "bg_third" : "bg_secondary"
             )}
             onClick={() => setNavigation(lowerCaseName)}
         >
@@ -41,7 +41,7 @@ export const MenuItem = ({
                 <div className="font-semibold text-xl">{name}</div>
             </div>
 
-            {selected === lowerCaseName && (
+            {selected && (
                 <div className="w-3 h-full absolute right-0 top-0 green rounded-tr-sm rounded-br-sm"></div>
             )}
         </div>

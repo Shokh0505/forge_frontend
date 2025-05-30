@@ -1,3 +1,4 @@
+"use client";
 import getWhiteListedPeople from "./_service/getWhiteListedPeople";
 import toggleAllowMessagesAsync from "./_service/allowMessages";
 import addWhiteList from "./_service/addWhiteList";
@@ -19,7 +20,7 @@ import { FaPen } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import isMessagingAllowed from "./_service/isMessagingAllowed";
 
-export const Settings = () => {
+export default function Settings() {
     const { username, profile_photo } = useUser();
     const { toggle } = useModalProfilePicture();
     const { open, setOpen } = useOpenChangeBio();
@@ -139,4 +140,4 @@ export const Settings = () => {
             </div>
         </div>
     );
-};
+}
