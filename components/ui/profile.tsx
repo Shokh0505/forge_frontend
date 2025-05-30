@@ -13,6 +13,7 @@ const Profile = (data: ProfileProps) => {
                 height={36}
                 alt="The profile picture"
                 className="w-full h-full object-cover"
+                priority
             />
         </div>
     );

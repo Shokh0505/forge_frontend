@@ -37,7 +37,7 @@ export const Settings = () => {
         };
 
         fetchData();
-    }, [allowMessages]);
+    }, []);
 
     useEffect(() => {
         const changeAllowMessages = async () => {
@@ -51,6 +51,9 @@ export const Settings = () => {
     const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && whiteListUsername.trim()) {
             await addWhiteList(whiteListUsername);
+            setWhiteListUsername("");
+            const people = await getWhiteListedPeople();
+            setAllowedPeople(people);
         }
     };
 
@@ -126,6 +129,7 @@ export const Settings = () => {
                         {!allowMessages && (
                             <WhitelistPeopleTable
                                 allowedPeople={allowedPeople}
+                                setAllowedPeople={setAllowedPeople}
                             />
                         )}
                     </div>

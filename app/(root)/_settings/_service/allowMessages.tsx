@@ -13,8 +13,6 @@ export default async function toggleAllowMessagesAsync() {
         if (!promise.ok) {
             throw new Error("Something went wrong. please try again later");
         }
-
-        toast.message("Successfully updated");
     } catch (error) {
         const err = error as Error;
         toast.message(err.message || "Internal Server Error");

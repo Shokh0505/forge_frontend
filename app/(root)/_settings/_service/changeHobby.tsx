@@ -12,7 +12,6 @@ export default async function changeBIO(bio: string) {
         );
 
         if (!promise.ok) {
-            toast.error("Couldn't update the bio. Please try again later");
             throw new Error("something went wrong");
         }
 

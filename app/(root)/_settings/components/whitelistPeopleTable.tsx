@@ -9,14 +9,27 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import deleteWhitelistedPerson from "../_service/deleteWhitelistPerson";
 
 interface WhitelistTableProps {
     allowedPeople: UserInterfaceWithID[];
+    setAllowedPeople: (value: UserInterfaceWithID[]) => void;
 }
 
 export const WhitelistPeopleTable = ({
     allowedPeople,
+    setAllowedPeople,
 }: WhitelistTableProps) => {
+    const handleDelete = async (id: string) => {
+        const isSuccessfullyDeleted = await deleteWhitelistedPerson(id);
+
+        if (isSuccessfullyDeleted) {
+            setAllowedPeople(
+                allowedPeople.filter((person) => person.id !== id)
+            );
+        }
+    };
+
     return (
         <div>
             <Table>
@@ -32,13 +45,23 @@ export const WhitelistPeopleTable = ({
                     </TableRow>
                 </TableHeader>
                 <TableBody>
+                    {allowedPeople.length === 0 && (
+                        <TableRow>
+                            <TableCell colSpan={2} className="text-center">
+                                No whitelisted users
+                            </TableCell>
+                        </TableRow>
+                    )}
                     {allowedPeople.map((person) => (
                         <TableRow key={person.id} className="mx-2">
                             <TableCell className="font-medium">
                                 {person.username}
                             </TableCell>
                             <TableCell className="text-right">
-                                <Button className="bg-red-700 cursor-pointer">
+                                <Button
+                                    className="bg-red-700 cursor-pointer"
+                                    onClick={() => handleDelete(person.id)}
+                                >
                                     Delete
                                 </Button>
                             </TableCell>
