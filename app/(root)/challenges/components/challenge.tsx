@@ -23,6 +23,7 @@ export const Challenge = ({
             if (data.length !== 0) {
                 setStreakData(data);
             }
+            console.log(data);
         };
         fetchData();
     }, []);

@@ -30,6 +30,11 @@ export default function ChallengeShow() {
         owner: { id: "", username: "" },
     });
 
+    const loadData = async () => {
+        const data = await getChallengeInfo(id);
+        if (data) setApiData(data);
+    };
+
     const handleJoinChallenge = async () => {
         const hasSuccessfullyJoined = await joinChallenge(id);
 
@@ -48,7 +53,7 @@ export default function ChallengeShow() {
 
         if (hasFinishedSuccessfully) {
             toast.message("Well done!");
-            setApiData({ ...apiData, isFinshedToday: true });
+            loadData();
         } else {
             toast.message(
                 "Oops, something went wrong. Please try again later!"
@@ -70,12 +75,7 @@ export default function ChallengeShow() {
     };
 
     useEffect(() => {
-        async function load() {
-            const data = await getChallengeInfo(id);
-            if (data) setApiData(data);
-        }
-
-        load();
+        loadData();
     }, []);
 
     return (

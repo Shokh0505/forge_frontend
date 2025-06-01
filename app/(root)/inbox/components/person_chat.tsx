@@ -7,7 +7,7 @@ export const PersonChat = ({
 }: {
     username: string;
     profile_photo?: string;
-    last_message: string;
+    last_message?: string;
 }) => {
     return (
         <div className="my-4 cursor-pointer w-full bg_third flex items-center justify-start p-4 rounded-xl">

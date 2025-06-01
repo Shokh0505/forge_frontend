@@ -29,9 +29,16 @@ const StreakGrid = ({ streakData }: StreakGridGroup) => {
             }, {} as Record<string, Streak>),
         [streakData]
     );
+
+    const date = new Date();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+
     const allDays = Array.from({ length: daysInMonth }, (_, index) => {
         const day = index + 1;
-        return `2025-04-${day.toString().padStart(2, "0")}`;
+        return `${year.toString()}-${month.toString().padStart(2, "0")}-${day
+            .toString()
+            .padStart(2, "0")}`;
     });
 
     const oldestDate = useMemo(() => {

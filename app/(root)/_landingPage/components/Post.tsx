@@ -9,7 +9,6 @@ import Profile from "@/components/ui/profile";
 import { useRouter } from "next/navigation";
 
 import { FaHeart } from "react-icons/fa";
-import { IoIosAddCircle } from "react-icons/io";
 
 export const Post = ({ post }: { post: PostInterface }) => {
     const {
@@ -66,9 +65,6 @@ export const Post = ({ post }: { post: PostInterface }) => {
                     }`}
                     onClick={() => likeChallenge({ isUserLiked, id })}
                 />
-                <div>
-                    <IoIosAddCircle className="w-8 h-8" />
-                </div>
             </div>
         </div>
     );
