@@ -53,7 +53,7 @@ export default function ChallengeShow() {
 
         if (hasFinishedSuccessfully) {
             toast.message("Well done!");
-            loadData();
+            await loadData();
         } else {
             toast.message(
                 "Oops, something went wrong. Please try again later!"

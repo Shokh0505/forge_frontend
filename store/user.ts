@@ -4,6 +4,7 @@ interface UserInterface {
     username: string;
     email: string;
     profile_photo: string;
+    bio?: string;
 }
 
 const useUser = create<
@@ -12,6 +13,7 @@ const useUser = create<
     username: "",
     email: "",
     profile_photo: "",
+    bio: "",
 
     updateUser: (data) => set((state) => ({ ...state, ...data })),
 }));

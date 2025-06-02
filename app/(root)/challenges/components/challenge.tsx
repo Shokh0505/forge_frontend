@@ -7,6 +7,7 @@ import StreakGrid from "./streak";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import allowedMessaging from "../service/allowedMessaging";
 
 export const Challenge = ({
     data,
@@ -16,14 +17,12 @@ export const Challenge = ({
     const [streakData, setStreakData] = useState([]);
     const { id, days, percentage, streak, owner, challengeTitle } = data;
     const router = useRouter();
-
     useEffect(() => {
         const fetchData = async () => {
             const data = await getStreakData(id);
             if (data.length !== 0) {
                 setStreakData(data);
             }
-            console.log(data);
         };
         fetchData();
     }, []);
@@ -32,10 +31,13 @@ export const Challenge = ({
         router.push(`${process.env.NEXT_PUBLIC_FRONTEND_URL}challenge/${id}`);
     };
 
-    const handleNavigationChat = (
+    const handleNavigationChat = async (
         e: React.MouseEvent<HTMLDivElement, MouseEvent>
     ) => {
         e.stopPropagation();
+        const isAllowedMessaging = await allowedMessaging(owner.id);
+
+        if (!isAllowedMessaging) return;
 
         router.push(`${process.env.NEXT_PUBLIC_FRONTEND_URL}chat/${owner.id}`);
     };

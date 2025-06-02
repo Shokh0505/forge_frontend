@@ -29,6 +29,7 @@ export default function Settings() {
     const [allowedPeople, setAllowedPeople] = useState<UserInterfaceWithID[]>(
         []
     );
+    const { bio } = useUser();
 
     // is messaging allowed?
     useEffect(() => {
@@ -86,8 +87,7 @@ export default function Settings() {
                     <div className="text-3xl font-bold">{username}</div>
                     <div className="flex items-center justify-between mt-4">
                         <div className="text_secondary">
-                            Nimagadir qiziqadi hobbisini bilmayman futbol
-                            o&apos;ynashni yaxshi biladi
+                            {bio ? bio : "Sizda hali bio mavjud emas"}
                         </div>
                         <div>
                             <FaPen

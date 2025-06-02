@@ -12,7 +12,9 @@ export const Navbar = () => {
                 <Link href={"/"}>Forge</Link>
             </div>
             <div className="mr-4">
-                <Profile profile_photo={profile_photo} />
+                <Link href={"/settings"}>
+                    <Profile profile_photo={profile_photo} />
+                </Link>
             </div>
         </div>
     );

@@ -25,6 +25,7 @@ export default async function fetchUser() {
             username: user.username,
             email: user.email,
             profile_photo: user.profile_photo,
+            bio: res.bio,
         });
         return true;
     } catch (error) {
