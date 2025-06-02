@@ -1,11 +1,9 @@
 "use client";
-import getStreakData from "../service/getStreakData";
 import { ChallengeParticipatedInterface } from "@/interfaces/interfaces";
 
 import Profile from "@/components/ui/profile";
 import StreakGrid from "./streak";
 
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import allowedMessaging from "../service/allowedMessaging";
 
@@ -14,18 +12,8 @@ export const Challenge = ({
 }: {
     data: ChallengeParticipatedInterface;
 }) => {
-    const [streakData, setStreakData] = useState([]);
     const { id, days, percentage, streak, owner, challengeTitle } = data;
     const router = useRouter();
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await getStreakData(id);
-            if (data.length !== 0) {
-                setStreakData(data);
-            }
-        };
-        fetchData();
-    }, []);
 
     const handleGoChallenge = () => {
         router.push(`${process.env.NEXT_PUBLIC_FRONTEND_URL}challenge/${id}`);
@@ -82,7 +70,7 @@ export const Challenge = ({
                         <div>Sat</div>
                         <div>Sun</div>
                     </div>
-                    <StreakGrid streakData={streakData} />
+                    <StreakGrid id={id} />
                 </div>
             </div>
         </div>

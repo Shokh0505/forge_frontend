@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { useStreakData } from "../hooks/streakData";
 
 const daysInMonth = 31;
 // const firstDayOffset = 3;
@@ -6,10 +7,6 @@ const daysInMonth = 31;
 type Streak = {
     date: string;
     percentage: number;
-};
-
-type StreakGridGroup = {
-    streakData: Streak[];
 };
 
 const getColor = (percentage: number) => {
@@ -20,7 +17,9 @@ const getColor = (percentage: number) => {
     return "bg-green-800";
 };
 
-const StreakGrid = ({ streakData }: StreakGridGroup) => {
+const StreakGrid = ({ id }: { id: string }) => {
+    const { streakData } = useStreakData(id);
+
     const streakMap = useMemo(
         () =>
             streakData.reduce((acc, streak) => {
@@ -41,29 +40,13 @@ const StreakGrid = ({ streakData }: StreakGridGroup) => {
             .padStart(2, "0")}`;
     });
 
-    const oldestDate = useMemo(() => {
-        return streakData
-            .slice()
-            .sort(
-                (a, b) =>
-                    new Date(a.date).getTime() - new Date(b.date).getTime()
-            )[0];
-    }, [streakData]);
-
-    const offset = useMemo(() => {
-        if (!oldestDate?.date) return 0;
-
-        const date = new Date(oldestDate.date);
-        const firstMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-        const dayOfWeek = firstMonth.getDay();
-
-        return (dayOfWeek + 6) % 7;
-    }, [oldestDate]);
+    const offset = new Date(year, month - 1, 1).getDay();
+    const isoOffset = (offset + 6) % 7;
 
     return (
         <div>
             <div className="grid grid-cols-7 gap-1 px-8 flex-10/12">
-                {Array.from({ length: offset }).map((_, i) => (
+                {Array.from({ length: isoOffset }).map((_, i) => (
                     <div key={`offset-${i}`} className="w-5 h-5" />
                 ))}
 
