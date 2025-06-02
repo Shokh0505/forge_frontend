@@ -7,7 +7,6 @@ type AllowedMessagingInterface = {
 
 export default async function allowedMessaging(id: string) {
     try {
-        console.log(id);
         const resPromise = await fetch(
             `${process.env.NEXT_PUBLIC_FRONTEND_URL}api/allowedMessagingUser/`,
             {
@@ -22,7 +21,6 @@ export default async function allowedMessaging(id: string) {
         }
 
         const res: AllowedMessagingInterface = await resPromise.json();
-
         if (!res.isAllowed) {
             toast.message("Writing to this user is not allowed");
             return false;

@@ -36,7 +36,6 @@ export const Challenge = ({
     ) => {
         e.stopPropagation();
         const isAllowedMessaging = await allowedMessaging(owner.id);
-
         if (!isAllowedMessaging) return;
 
         router.push(`${process.env.NEXT_PUBLIC_FRONTEND_URL}chat/${owner.id}`);
