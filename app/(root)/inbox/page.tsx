@@ -8,7 +8,7 @@ import { inboxPeopleChatInterface } from "@/interfaces/interfaces";
 export default function Inbox() {
     const router = useRouter();
     const { inboxPeople, loading, error } = useInboxPeople();
-
+    console.log(inboxPeople);
     const handleNavigateChat = (event: React.MouseEvent<HTMLDivElement>) => {
         const target = event.currentTarget.getAttribute("data-id");
         if (target) {

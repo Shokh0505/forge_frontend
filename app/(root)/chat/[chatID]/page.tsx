@@ -3,7 +3,11 @@
 import useNavigation from "@/store/navigation";
 import getToken from "./_service/getToken";
 import getMessages from "./_service/getMessages";
-import { MessageDataAPI, MessagesInterface } from "@/interfaces/interfaces";
+import {
+    inboxPeopleChatInterface,
+    MessageDataAPI,
+    MessagesInterface,
+} from "@/interfaces/interfaces";
 
 import Profile from "@/components/ui/profile";
 import { FaArrowAltCircleLeft } from "react-icons/fa";
@@ -14,6 +18,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import cookie from "cookie";
+import useInboxPeople from "../../inbox/_hooks/inboxPeople";
 
 export default function PersonChatIndividual() {
     const params = useParams();
@@ -34,6 +39,21 @@ export default function PersonChatIndividual() {
     const [hasMoreMessages, setHasMoreMessages] = useState(true);
     const [token, setToken] = useState("");
     const [isTokenReady, setIsTokenReady] = useState(false);
+    const [chat, setChat] = useState<inboxPeopleChatInterface | undefined>(
+        undefined
+    );
+
+    const { inboxPeople, loading } = useInboxPeople();
+
+    useEffect(() => {
+        if (!loading) {
+            const foundChat = inboxPeople.find(
+                (item: inboxPeopleChatInterface) => item.user.id == partnerID
+            );
+            console.log(foundChat);
+            setChat(foundChat);
+        }
+    }, [loading, inboxPeople, partnerID]);
 
     const { setNavigation } = useNavigation();
 
@@ -189,7 +209,6 @@ export default function PersonChatIndividual() {
     useEffect(() => {
         const container = messageContainerRef.current;
         if (!container) return;
-        console.log(loadingMoreRef.current);
 
         if (loadingMoreRef.current) {
             const newScrollHeight = container.scrollHeight;
@@ -232,9 +251,19 @@ export default function PersonChatIndividual() {
                     <div className="flex items-center justify-between w-full">
                         <div className="flex items-center justify-start">
                             <div className="w-14 h-14">
-                                <Profile />
+                                {chat ? (
+                                    <Profile
+                                        profile_photo={chat.user.profile_photo}
+                                    />
+                                ) : (
+                                    <Profile />
+                                )}
                             </div>
-                            <div className="ml-4">Adham Sartorosh.</div>
+                            <div className="ml-4">
+                                {chat
+                                    ? chat.user.username
+                                    : "Username loading..."}
+                            </div>
                         </div>
                         <div>
                             <FaArrowAltCircleLeft
