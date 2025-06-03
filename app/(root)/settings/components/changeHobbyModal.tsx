@@ -11,16 +11,19 @@ import { Textarea } from "@/components/ui/textarea";
 import useOpenChangeBio from "@/store/openChangeBio";
 import changeBIO from "../_service/changeHobby";
 import { useState } from "react";
+import useUser from "@/store/user";
 
 export const ChangeHobbyModal = () => {
     const [textValue, setTextValue] = useState("");
     const { open, setOpen } = useOpenChangeBio();
-
+    const { updateUser } = useUser();
     const handleSubmit = async () => {
         if (!textValue) return;
         const isSuccessfullyUpdated = await changeBIO(textValue);
 
         if (isSuccessfullyUpdated) setOpen(!open);
+        updateUser({ bio: textValue });
+        setTextValue("");
     };
 
     return (
