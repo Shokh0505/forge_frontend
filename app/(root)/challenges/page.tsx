@@ -30,7 +30,7 @@ export default function Challenges() {
     if (isLoading) return <div className="px-32 mt-12">Loading ...</div>;
 
     return (
-        <div className="px-32 pb-4 mt-12">
+        <div className="w-full sm:px-12 xl:px-32 pb-4 mt-12">
             <h2 className="text-3xl font-semibold">My challenges</h2>
             {dataChallenges &&
                 dataChallenges.map(

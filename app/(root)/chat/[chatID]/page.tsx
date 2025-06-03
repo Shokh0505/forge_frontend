@@ -27,10 +27,10 @@ export default function PersonChatIndividual() {
     const paginatorRef = useRef(1);
     const prevScrollHeight = useRef(0);
     const prevScrollTop = useRef(0);
+    const loadingMoreRef = useRef(false);
 
     const [chatMessage, setChatMessage] = useState("");
     const [messages, setMessages] = useState<MessagesInterface[]>([]);
-    const [paginatorNumber, setPaginatorNumber] = useState(1);
     const [hasMoreMessages, setHasMoreMessages] = useState(true);
     const [token, setToken] = useState("");
     const [isTokenReady, setIsTokenReady] = useState(false);
@@ -43,6 +43,7 @@ export default function PersonChatIndividual() {
         const container = messageContainerRef.current;
         if (!container) return;
 
+        loadingMoreRef.current = true;
         prevScrollHeight.current = container.scrollHeight;
         prevScrollTop.current = container.scrollTop;
 
@@ -63,10 +64,13 @@ export default function PersonChatIndividual() {
         }));
 
         setMessages((prevMessages) => [...newMessages, ...prevMessages]);
-        setPaginatorNumber((prevNumber) => {
-            paginatorRef.current = prevNumber + 1;
-            return prevNumber + 1;
-        });
+        paginatorRef.current = paginatorRef.current + 1;
+
+        // For future dev:
+        // if the chat becomes really heavy, switch to animation frame for updating the ui
+        setTimeout(() => {
+            loadingMoreRef.current = false;
+        }, 1000);
     };
 
     // Just getting the token
@@ -183,17 +187,18 @@ export default function PersonChatIndividual() {
     }, [hasMoreMessages, paginatorRef.current]);
 
     useEffect(() => {
-        if (paginatorNumber === 1) {
-            scrollToBottom();
-        } else {
-            const container = messageContainerRef.current;
-            if (!container) return;
+        const container = messageContainerRef.current;
+        if (!container) return;
+        console.log(loadingMoreRef.current);
 
+        if (loadingMoreRef.current) {
             const newScrollHeight = container.scrollHeight;
             container.scrollTop =
                 newScrollHeight -
                 prevScrollHeight.current +
                 prevScrollTop.current;
+        } else {
+            scrollToBottom();
         }
     }, [messages]);
 
@@ -221,10 +226,10 @@ export default function PersonChatIndividual() {
     }
 
     return (
-        <div className="flex items-center justify-center">
-            <div className="bg_secondary px-8 pt-8 overflow-y-auto w-[50rem] rounded-xl h-[78vh] flex justify-between items-center flex-col">
-                <div className="flex-2/8">
-                    <div className="flex items-center justify-between w-[45rem]">
+        <div className="flex items-center justify-center lg:px-12 xl:px-24">
+            <div className="bg_secondary px-2 lg:px-12 pt-8  w-full  rounded-xl h-[78vh] flex justify-between items-center flex-col">
+                <div className="w-full shrink-0">
+                    <div className="flex items-center justify-between w-full">
                         <div className="flex items-center justify-start">
                             <div className="w-14 h-14">
                                 <Profile />
@@ -241,7 +246,7 @@ export default function PersonChatIndividual() {
                     <hr className="bg-amber-100 mt-4" />
                 </div>
                 <div
-                    className="w-[45rem] flex-5/8 overflow-y-auto px-2 pb-2"
+                    className="w-full flex-1 overflow-y-auto px-2 pb-2"
                     ref={messageContainerRef}
                 >
                     <div ref={messageTopRef}></div>
@@ -269,7 +274,7 @@ export default function PersonChatIndividual() {
                     ))}
                     <div ref={messageEndRef} />
                 </div>
-                <div className="flex-1/8 w-full relative">
+                <div className="shrink-0 mb-4 w-full relative">
                     <Input
                         placeholder="Your message"
                         type="text"

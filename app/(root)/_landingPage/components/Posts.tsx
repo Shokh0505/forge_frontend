@@ -78,7 +78,7 @@ export default function Posts() {
             </div>
 
             {!isFetching && data?.pages.length === 0 && (
-                <div className="mt-8 w-[45rem] bg_secondary mx-auto border rounded-md px-2 py-4">
+                <div className="mt-8 w-full  bg_secondary mx-auto border rounded-md px-2 py-4">
                     There is no available posts for now.
                 </div>
             )}

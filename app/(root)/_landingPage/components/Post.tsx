@@ -29,7 +29,7 @@ export const Post = ({ post }: { post: PostInterface }) => {
     };
 
     return (
-        <div className="mt-8 w-[45rem] bg_secondary mx-auto border rounded-md">
+        <div className="mt-8 w-full bg_secondary mx-auto border rounded-md">
             <div
                 className="flex items-center flex-start px-8 py-6 cursor-pointer"
                 onClick={handleGoChallenge}
@@ -45,14 +45,14 @@ export const Post = ({ post }: { post: PostInterface }) => {
                 </div>
             </div>
             {challenge_photo && (
-                <div className="mt-2 relative w-[40rem] mx-auto h-[20rem] rounded-sm overflow-hidden px-8 py-4">
+                <div className="mt-2 relative w-full mx-auto h-[20rem] rounded-sm overflow-hidden px-8 py-4">
                     <Image
                         src={`http://127.0.0.1:8000${challenge_photo}`}
                         alt="Post image"
                         fill
                         sizes="(max-width: 768px) 100vw, 50vw"
                         style={{ objectFit: "cover" }}
-                        className="rounded-sm"
+                        className="rounded-sm px-4"
                     />
                 </div>
             )}

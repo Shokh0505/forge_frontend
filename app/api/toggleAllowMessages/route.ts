@@ -25,8 +25,10 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ status: resDjango.status });
         }
 
+        const data = await resDjango.json();
+
         return NextResponse.json(
-            { message: "Successfully updated bio!" },
+            { message: "Successfully updated bio!", isAllowed: data.isAllowed },
             { status: 200 }
         );
     } catch {

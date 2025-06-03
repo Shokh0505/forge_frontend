@@ -1,5 +1,4 @@
 "use client";
-import Profile from "@/components/ui/profile";
 import useOpenCreateChallenge from "@/store/openCreateChallenge";
 
 import { useChallengeTitle } from "../hooks/useChallengeTitle";
@@ -13,22 +12,25 @@ export const TopCreateChallenge = () => {
     const openDialog = () => setIsOpen(true);
 
     return (
-        <div className="bg_secondary w-[45rem] mt-12 flex items-center justify-between py-4 px-8 rounded-lg border mx-auto">
-            <Profile />
-            <Input
-                className="w-[30rem] placeholder"
-                placeholder="Create a challenge..."
-                value={challengeTitle}
-                onChange={(e) => {
-                    setChallengeTitle(e.target.value);
-                }}
-            />
-            <Button
-                className="px-4 py-2 green text-[1.1rem] cursor-pointer"
-                onClick={openDialog}
-            >
-                Create
-            </Button>
+        <div className="bg_secondary w-full mt-12 flex items-center justify-between flex-col lg:flex-row py-4 px-2 lg:px-8 rounded-lg border mx-auto gap-2">
+            <div className="w-full lg:flex-3/4 ">
+                <Input
+                    className="h-10 placeholder"
+                    placeholder="Challenge name..."
+                    value={challengeTitle}
+                    onChange={(e) => {
+                        setChallengeTitle(e.target.value);
+                    }}
+                />
+            </div>
+            <div className="lg:flex-1/4 w-full">
+                <Button
+                    className="w-full mt-4 lg:mt-0 p-4 lg:py-2 green text-[1.1rem] cursor-pointer"
+                    onClick={openDialog}
+                >
+                    Create
+                </Button>
+            </div>
         </div>
     );
 };

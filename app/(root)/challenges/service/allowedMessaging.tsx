@@ -30,6 +30,8 @@ export default async function allowedMessaging(id: string) {
             toast.message("You can't message yourself");
             return false;
         }
+
+        return true;
     } catch (error) {
         const err = error as Error;
         toast.error(err.message || "Internal server error.");

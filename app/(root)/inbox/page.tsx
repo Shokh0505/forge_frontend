@@ -24,9 +24,9 @@ export default function Inbox() {
     if (error) return <div>{error}</div>;
 
     return (
-        <div className="px-32 pb-4 mt-12 overflow-auto">
+        <div className="w-full lg:px-12 pb-4 mt-12 overflow-auto">
             <h2 className="text-3xl font-semibold">Inbox</h2>
-            <div className="mt-8 rounded-xl bg_secondary py-8 px-10">
+            <div className="mt-8 rounded-xl bg_secondary py-2 lg:py-8 px-4 lg:px-10">
                 {inboxPeople.map(
                     (chat: inboxPeopleChatInterface, indx: number) => (
                         <div

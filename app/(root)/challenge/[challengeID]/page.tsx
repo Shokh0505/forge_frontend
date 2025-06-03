@@ -79,7 +79,7 @@ export default function ChallengeShow() {
 
     return (
         <>
-            <div className="px-32 pb-4 mt-12 overflow-y-auto">
+            <div className="w-full lg:px-12 pb-4 mt-12 overflow-y-auto">
                 {apiData.isJoined ? (
                     !apiData.isFinshedToday && (
                         <div className="py-4 flex items-center justify-between bg_secondary px-8 rounded w-[45rem]">
@@ -95,7 +95,7 @@ export default function ChallengeShow() {
                         </div>
                     )
                 ) : (
-                    <div className="py-4 flex items-center justify-between bg_secondary px-8 rounded w-[45rem]">
+                    <div className="py-4 flex items-center justify-between bg_secondary px-8 rounded w-full">
                         <div>Want to join the challenge?</div>
                         <div>
                             <Button
@@ -120,7 +120,7 @@ export default function ChallengeShow() {
                     />
                 </div>
                 {apiData.topLeaders?.length !== 0 && (
-                    <div className="mt-4 bg_secondary w-[45rem] rounded px-8 py-4">
+                    <div className="mt-4 bg_secondary w-full rounded px-8 py-4">
                         <h3 className="text-xl font-bold">Top leaders</h3>
                         {apiData.topLeaders.map((person, idx) => (
                             <div key={idx}>
@@ -133,11 +133,11 @@ export default function ChallengeShow() {
                     </div>
                 )}
             </div>
-            <div className="px-32">
+            <div className="w-full lg:px-12">
                 {apiData.isJoined && (
-                    <div className="py-4 flex items-center justify-between bg_secondary px-8 rounded w-[45rem]">
+                    <div className="py-4 flex items-center justify-between flex-col lg:flex-row bg_secondary px-8 rounded w-full">
                         <div>Do you want to leave the challenge?</div>
-                        <div>
+                        <div className="mt-6 lg:mt-0">
                             <Button
                                 className="bg-red-600 hover:bg-red-800 py-2 px-4 h-auto text-[1.1rem] cursor-pointer"
                                 onClick={handleLeaveChallenge}

@@ -24,11 +24,11 @@ export default function RootGroupLayout({
             className={`${inter.variable} font-sans antialiased bg_main px-10 min-h-screen`}
         >
             <Navbar />
-            <div className="flex justify-between items-start text_main">
-                <aside className="mt-12 flex-1/4">
+            <div className="flex justify-between items-start text_main w-full">
+                <aside className="mt-12 hidden lg:block lg:flex-1/4">
                     <Leftbar />
                 </aside>
-                <div className="flex-3/4 h-[calc(100vh-10.25rem)] overflow-y-scroll">
+                <div className="w-full lg:flex-3/4 h-[calc(100vh-10.25rem)] overflow-y-scroll">
                     {children}
                 </div>
             </div>

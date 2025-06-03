@@ -24,7 +24,7 @@ export default function Settings() {
     const { username, profile_photo } = useUser();
     const { toggle } = useModalProfilePicture();
     const { open, setOpen } = useOpenChangeBio();
-    const [allowMessages, setAllowMessages] = useState(true);
+    const [allowMessages, setAllowMessages] = useState<boolean | null>(null);
     const [whiteListUsername, setWhiteListUsername] = useState("");
     const [allowedPeople, setAllowedPeople] = useState<UserInterfaceWithID[]>(
         []
@@ -40,14 +40,6 @@ export default function Settings() {
 
         fetchData();
     }, []);
-
-    useEffect(() => {
-        const changeAllowMessages = async () => {
-            await toggleAllowMessagesAsync();
-        };
-
-        changeAllowMessages();
-    }, [allowMessages]);
 
     // add to white list
     const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -72,7 +64,7 @@ export default function Settings() {
     }, [allowMessages]);
 
     return (
-        <div className="px-32 pb-4 mt-12 overflow-auto">
+        <div className="w-full lg:px-12 pb-4 mt-4 lg:mt-12 overflow-auto">
             <div className="w-full bg_secondary pt-[8rem] rounded-xl pb-10">
                 <div className="relative w-full">
                     <div
@@ -102,12 +94,27 @@ export default function Settings() {
                     <h3 className="text-3xl font-bold">Settings</h3>
                     <div className="flex justify-between items-center mt-10">
                         <div>Allow users to send me messages</div>
-                        <div>
-                            <Switch
-                                checked={allowMessages}
-                                onCheckedChange={setAllowMessages}
-                            />
-                        </div>
+                        {allowMessages === null ? (
+                            <div>Loading...</div>
+                        ) : (
+                            <div>
+                                <Switch
+                                    checked={allowMessages}
+                                    onCheckedChange={async (checked) => {
+                                        setAllowMessages(checked);
+                                        try {
+                                            await toggleAllowMessagesAsync();
+                                        } catch (e) {
+                                            setAllowMessages((prev) => !prev);
+                                            console.error(
+                                                "Failed to update message setting:",
+                                                e
+                                            );
+                                        }
+                                    }}
+                                />
+                            </div>
+                        )}
                     </div>
                     {!allowMessages && (
                         <div className="mt-4 flex justify-between items-center">
