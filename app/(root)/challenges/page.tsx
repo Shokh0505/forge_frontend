@@ -43,6 +43,10 @@ export default function Challenges() {
                         </div>
                     )
                 )}
+
+            {!isLoading && dataChallenges.length === 0 && (
+                <div>No challenges yet. Join some challenges to see them</div>
+            )}
         </div>
     );
 }

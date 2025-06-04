@@ -19,6 +19,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import cookie from "cookie";
 import useInboxPeople from "../../inbox/_hooks/inboxPeople";
+import getUsername from "./_service/getUsername";
 
 export default function PersonChatIndividual() {
     const params = useParams();
@@ -42,7 +43,8 @@ export default function PersonChatIndividual() {
     const [chat, setChat] = useState<inboxPeopleChatInterface | undefined>(
         undefined
     );
-
+    const [username, setUsername] = useState<string | null>(null);
+    const [profile_photo, setProfilePhoto] = useState<string | null>(null);
     const { inboxPeople, loading } = useInboxPeople();
 
     useEffect(() => {
@@ -50,10 +52,26 @@ export default function PersonChatIndividual() {
             const foundChat = inboxPeople.find(
                 (item: inboxPeopleChatInterface) => item.user.id == partnerID
             );
-            console.log(foundChat);
+            if (foundChat) {
+                setUsername(foundChat.user.username);
+                if (foundChat.user.profile_photo)
+                    setProfilePhoto(foundChat.user.profile_photo);
+            }
             setChat(foundChat);
         }
     }, [loading, inboxPeople, partnerID]);
+
+    useEffect(() => {
+        const getUsernameData = async () => {
+            if (!loading && !chat) {
+                const data = await getUsername(partnerID as string);
+                const { username, profile_photo } = data;
+                setUsername(username);
+                setProfilePhoto(profile_photo);
+            }
+        };
+        getUsernameData();
+    }, [loading, chat, partnerID]);
 
     const { setNavigation } = useNavigation();
 
@@ -253,16 +271,16 @@ export default function PersonChatIndividual() {
                             <div className="w-14 h-14">
                                 {chat ? (
                                     <Profile
-                                        profile_photo={chat.user.profile_photo}
+                                        profile_photo={
+                                            profile_photo ? profile_photo : ""
+                                        }
                                     />
                                 ) : (
                                     <Profile />
                                 )}
                             </div>
                             <div className="ml-4">
-                                {chat
-                                    ? chat.user.username
-                                    : "Username loading..."}
+                                {username ? username : "Username loading..."}
                             </div>
                         </div>
                         <div>
@@ -279,6 +297,11 @@ export default function PersonChatIndividual() {
                     ref={messageContainerRef}
                 >
                     <div ref={messageTopRef}></div>
+                    {!loading && messages.length === 0 && (
+                        <div className="w-full flex items-center justify-center h-full">
+                            No messages here yet
+                        </div>
+                    )}
                     {messages.map((message, indx) => (
                         <div
                             key={indx}

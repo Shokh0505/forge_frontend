@@ -8,7 +8,6 @@ import { inboxPeopleChatInterface } from "@/interfaces/interfaces";
 export default function Inbox() {
     const router = useRouter();
     const { inboxPeople, loading, error } = useInboxPeople();
-    console.log(inboxPeople);
     const handleNavigateChat = (event: React.MouseEvent<HTMLDivElement>) => {
         const target = event.currentTarget.getAttribute("data-id");
         if (target) {
@@ -20,7 +19,7 @@ export default function Inbox() {
         }
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <div className="px-12">Loading...</div>;
     if (error) return <div>{error}</div>;
 
     return (
@@ -41,6 +40,9 @@ export default function Inbox() {
                             />
                         </div>
                     )
+                )}
+                {!loading && inboxPeople.length === 0 && (
+                    <div>You don&apos;t have any people in your inbox </div>
                 )}
             </div>
         </div>

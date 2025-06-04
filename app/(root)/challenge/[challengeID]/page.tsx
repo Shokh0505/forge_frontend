@@ -13,11 +13,12 @@ import { Button } from "@/components/ui/button";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-
+import { useStreakStore } from "@/store/streakData";
 export default function ChallengeShow() {
     const params = useParams();
     const rawID = params.challengeID;
     const id = Array.isArray(rawID) ? rawID[0] : rawID ?? ("" as string);
+    const { fetchData } = useStreakStore();
 
     const [apiData, setApiData] = useState<ChallengeInfoInterface>({
         isJoined: false,
@@ -52,6 +53,7 @@ export default function ChallengeShow() {
         const hasFinishedSuccessfully = await finishToday(id);
 
         if (hasFinishedSuccessfully) {
+            fetchData(id);
             toast.message("Well done!");
         } else {
             toast.message(
@@ -73,8 +75,10 @@ export default function ChallengeShow() {
         }
     };
 
+    // get challenge and streak info
     useEffect(() => {
         loadData();
+        fetchData(id);
     }, []);
 
     return (
@@ -82,7 +86,7 @@ export default function ChallengeShow() {
             <div className="w-full lg:px-12 pb-4 mt-12 overflow-y-auto">
                 {apiData.isJoined ? (
                     !apiData.isFinshedToday && (
-                        <div className="py-4 flex items-center justify-between bg_secondary px-8 rounded w-[45rem]">
+                        <div className="py-4 flex items-center justify-between bg_secondary px-8 rounded w-full">
                             <div>Did you finish the challenge today?</div>
                             <div>
                                 <Button

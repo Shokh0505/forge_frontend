@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { useStreakData } from "../hooks/streakData";
+import { useStreakStore } from "@/store/streakData";
 
 const daysInMonth = 31;
 // const firstDayOffset = 3;
@@ -17,8 +17,8 @@ const getColor = (percentage: number) => {
     return "bg-green-800";
 };
 
-const StreakGrid = ({ id }: { id: string }) => {
-    const { streakData } = useStreakData(id);
+const StreakGrid = () => {
+    const { streakData } = useStreakStore();
 
     const streakMap = useMemo(
         () =>

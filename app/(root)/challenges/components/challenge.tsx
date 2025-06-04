@@ -77,7 +77,7 @@ export const Challenge = ({
                         <div>Sat</div>
                         <div>Sun</div>
                     </div>
-                    <StreakGrid id={id} />
+                    <StreakGrid />
                 </div>
             </div>
         </div>
