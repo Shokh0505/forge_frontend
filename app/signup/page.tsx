@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Signup() {
     const {
@@ -101,6 +102,10 @@ export default function Signup() {
                 <Button className="green text-xl w-full mt-8 py-2 h-auto cursor-pointer">
                     Signup
                 </Button>
+                <hr className="mt-4 bg-gray-400" />
+                <div className="mt-4 text-gray-400 flex items-center justify-center font-medium">
+                    <Link href="/login">Login</Link>
+                </div>
             </form>
             <Toaster />
         </div>
