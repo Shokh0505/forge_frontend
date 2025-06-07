@@ -25,6 +25,8 @@
 
 ---
 
+## 👉 Looking for the backend? [Check out forge_backend](https://github.com/Shokh0505/forge_backend)
+
 ## Getting Started
 
 > _All commands assume a **Linux** environment. If you’re on Windows (👀), find the equivalents — or better yet, **switch to Linux**._
