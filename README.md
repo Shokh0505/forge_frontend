@@ -130,3 +130,7 @@ http://localhost:3000
 ```
 
 You should see the Forge app running. You're now ready to create and join challenges!
+
+### App demo
+
+![DEMO](./assets/demo.gif)
